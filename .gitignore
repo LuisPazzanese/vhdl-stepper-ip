@@ -1,0 +1,31 @@
+# Saidas do Quartus
+db/
+incremental_db/
+output_files/
+simulation/
+greybox_tmp/
+*.rpt
+*.summary
+*.smsg
+*.sof
+*.pin
+*.done
+*.jdi
+*.sld
+*.qws
+*.qdf
+c5_pin_model_dump.txt
+
+# Saidas do ModelSim/Questa
+work/
+transcript
+vsim.wlf
+modelsim.ini
+
+# Backups
+*.bak
+*.bak2
+*.old
+*.v2
+*.quebrado
+*.obsoleto
