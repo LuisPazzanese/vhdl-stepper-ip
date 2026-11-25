@@ -1,14 +1,14 @@
 # IP core para motor de passo com curva de aceleração
 
+> Stepper motor IP core in VHDL for a DE10-Standard (Cyclone V): trapezoidal
+> acceleration from a phase accumulator, no multiplier or divider, 168 ALMs,
+> +13 ns setup slack at 50 MHz, self-checking testbench with 7 cases.
+
+![Diagrama de blocos: sincronizador, FSM de controle, rampa, acumulador de fase, sequenciador, bobinas](docs/stepper-ip.svg)
+
 Driver de motor de passo unipolar (28BYJ-48 + ULN2003) escrito em VHDL para a
 DE10-Standard, com controle de direção, quatro velocidades, número programável
 de passos e **rampa de aceleração trapezoidal**.
-
-| Item da rubrica | Onde está |
-|---|---|
-| **C** — EN, DIR, VEL[1:0] | `stepmotor.vhd`, processos `p1_sync`, `p3_seq`, `p4` |
-| **B** — número de passos | `stepmotor.vhd`, processo `p5_ctrl` |
-| **A** — curva de aceleração | `stepmotor.vhd`, processos `p2_tick`, `p6_rampa` e a FSM de `p5_ctrl` |
 
 ### Dois modos de operação
 
@@ -248,7 +248,7 @@ vsim -c work.tb_stepmotor -do "run -all; quit -f"
 O testbench é **auto-verificável** — não depende de olhar waveform. Ele roda o
 IP com `CLK_FREQ = 50_000` em vez de 50 MHz: a aritmética das constantes é
 idêntica, mas um "segundo" simulado vira 50 000 ciclos, então a rampa inteira
-cabe em milissegundos de simulação. Seis casos:
+cabe em milissegundos de simulação. Sete casos:
 
 1. Contagem exata de passos e pulso de `done`
 2. Perfil trapezoidal: o intervalo entre passos cai, estabiliza e sobe
@@ -379,6 +379,14 @@ periféricos da placa.
 - **Ressonância** — motores de passo têm faixas de velocidade instáveis. Um
   perfil de aceleração bem feito serve também para *atravessar* essas faixas
   rápido em vez de operar dentro delas.
+
+## Rubrica da disciplina
+
+| Item da rubrica | Onde está |
+|---|---|
+| **C** — EN, DIR, VEL[1:0] | `stepmotor.vhd`, processos `p1_sync`, `p3_seq`, `p4` |
+| **B** — número de passos | `stepmotor.vhd`, processo `p5_ctrl` |
+| **A** — curva de aceleração | `stepmotor.vhd`, processos `p2_tick`, `p6_rampa` e a FSM de `p5_ctrl` |
 
 ## Referências
 

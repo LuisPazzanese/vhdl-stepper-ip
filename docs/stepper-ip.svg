@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 560">
+  <title>Stepper motor IP core: block diagram</title>
+  <style>
+    .ink { stroke: #16181a; fill: none; stroke-width: 1.5; }
+    .box { fill: #fbfbf9; stroke: #16181a; stroke-width: 1.5; }
+    .t { font: 600 15px ui-monospace, Menlo, Consolas, monospace; fill: #16181a; letter-spacing: .04em; }
+    .d { font: 13px system-ui, sans-serif; fill: #5c6166; }
+    .s { font: 12px ui-monospace, Menlo, Consolas, monospace; fill: #5c6166; }
+    .acc { stroke: #1f7a4d; }
+    .head { fill: #1f7a4d; }
+    .rule { stroke: #d9dcd6; }
+    @media (prefers-color-scheme: dark) {
+      .ink { stroke: #e5e8e6; }
+      .box { fill: #0f1211; stroke: #e5e8e6; }
+      .t { fill: #e5e8e6; }
+      .d, .s { fill: #98a09c; }
+      .acc { stroke: #4cc38a; }
+      .head { fill: #4cc38a; }
+      .rule { stroke: #2b332f; }
+    }
+  </style>
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0L10 5L0 10z" class="head"/>
+    </marker>
+  </defs>
+
+  <!-- inputs -->
+  <g class="s">
+    <text x="30" y="118">EN</text><text x="30" y="148">DIR</text><text x="30" y="178">VEL[1:0]</text>
+    <text x="30" y="208">STEPS[5:0]</text><text x="30" y="238">START</text>
+  </g>
+  <g class="ink acc" marker-end="url(#a)">
+    <path d="M118 114H168"/><path d="M118 144H168"/><path d="M118 174H168"/><path d="M118 204H168"/><path d="M118 234H168"/>
+  </g>
+
+  <rect x="170" y="90" width="180" height="170" class="box"/>
+  <text x="260" y="160" text-anchor="middle" class="t">SYNC</text>
+  <text x="260" y="186" text-anchor="middle" class="d">two flip-flops per input</text>
+  <text x="260" y="206" text-anchor="middle" class="d">START → 1-cycle pulse</text>
+
+  <rect x="410" y="60" width="200" height="110" class="box"/>
+  <text x="510" y="100" text-anchor="middle" class="t">CONTROL FSM</text>
+  <text x="510" y="126" text-anchor="middle" class="d">idle · accel · cruise · decel</text>
+  <text x="510" y="146" text-anchor="middle" class="d">brake when left ≤ n_accel</text>
+
+  <rect x="670" y="60" width="200" height="110" class="box"/>
+  <text x="770" y="100" text-anchor="middle" class="t">RAMP</text>
+  <text x="770" y="126" text-anchor="middle" class="d">incr ± ΔINCR every 1 ms</text>
+  <text x="770" y="146" text-anchor="middle" class="d">same slope up and down</text>
+
+  <rect x="410" y="230" width="200" height="110" class="box"/>
+  <text x="510" y="270" text-anchor="middle" class="t">PHASE ACC</text>
+  <text x="510" y="296" text-anchor="middle" class="d">acc += incr; tick on carry</text>
+  <text x="510" y="316" text-anchor="middle" class="d">rate = incr · f_clk / 2²⁶</text>
+
+  <rect x="410" y="400" width="200" height="100" class="box"/>
+  <text x="510" y="440" text-anchor="middle" class="t">SEQUENCER</text>
+  <text x="510" y="466" text-anchor="middle" class="d">8-entry half-step table</text>
+
+  <rect x="670" y="400" width="200" height="100" class="box"/>
+  <text x="770" y="440" text-anchor="middle" class="t">COILS A·B·C·D</text>
+  <text x="770" y="466" text-anchor="middle" class="d">ULN2003 → 28BYJ-48</text>
+
+  <g class="ink" marker-end="url(#a)">
+    <path d="M350 130H408"/><path d="M610 115H668"/><path d="M770 170V285H612"/>
+    <path d="M510 340V398"/><path d="M610 450H668"/><path d="M350 220H380V285H408"/>
+  </g>
+  <g class="s">
+    <text x="354" y="122">in</text><text x="620" y="107">target</text><text x="780" y="236">incr</text>
+    <text x="520" y="376">tick (clock enable)</text><text x="625" y="442">idx</text>
+  </g>
+
+  <line x1="30" y1="530" x2="930" y2="530" class="rule"/>
+  <text x="30" y="552" class="s">50 MHz · ONE CLOCK DOMAIN · NO MULTIPLIER OR DIVIDER · CYCLONE V (DE10-STANDARD)</text>
+</svg>
